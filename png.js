@@ -42,18 +42,18 @@ ihdr.writeUInt8(0, 18); // compression
 ihdr.writeUInt8(0, 19); // filter
 ihdr.writeUInt8(0, 20); // interlace (no Adam7)
 
-// add a zero byte to the end of each row indicating no filter
+// add a zero byte to the start of each row indicating no filter
 const filteredImg = Buffer.alloc(img.length + rowSize + 1);
 for (var i = 0; i < rowSize; i++) {
   sourceStart = i * rowSize;
   sourceEnd = sourceStart + rowSize;
-  targetStart = sourceStart + i;
-  filterIndex = targetStart + rowSize + 1;
+  filterIndex = (i * rowSize) + i;
+  targetStart = filterIndex + 1;
   console.log({
     sourceStart,
     sourceEnd,
-    targetStart,
     filterIndex,
+    targetStart,
   });
   img.copy(filteredImg, targetStart, sourceStart, sourceEnd);
   filteredImg.writeUInt8(0, filterIndex);
