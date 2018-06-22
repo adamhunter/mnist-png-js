@@ -13,7 +13,7 @@ const rowSize = buffer.slice(8, 12).readUInt32BE();
 const columnSize = buffer.slice(12, 16).readUInt32BE();
 const matrixSize = rowSize * columnSize;
 
-const imgIndex = 3;
+const imgIndex = 2;
 const start = bodyOffset + matrixSize * imgIndex;
 const end = matrixSize + matrixSize * imgIndex + bodyOffset;
 const img = buffer.slice(start, end);
@@ -59,11 +59,7 @@ for (var i = 0; i < rowSize; i++) {
   filteredImg.writeUInt8(0, filterIndex);
 }
 
-const compressed = zlib.deflateSync(filteredImg, {
-  level: 9,
-  chunkSize: 32 * 1024,
-  strategy: 3 + 1,
-});
+const compressed = zlib.deflateSync(filteredImg);
 const idatHeader = new Buffer.alloc(8)
 idatHeader.writeUInt32BE(compressed.length);
 idatHeader.write('IDAT', 4);
